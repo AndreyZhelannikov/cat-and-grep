@@ -26,15 +26,15 @@ int main(int argc, char **argv) {
 
 void s21_cat(int argc, char **argv) {
     int flags[6] = {0};
-    // memset(flags, 0, 6);
+    int fail_flags = 0;
     int i = 1;
     for (; i < argc; i++) {
         if (strspn(argv[i], "-") == 0) break;
-        s21_flags(argv[i], flags);
+        if (s21_flags(argv[i], flags) == 1) fail_flags = 1;
     }
     if (flags[0]) flags[3] = 0;
-    if (i == argc) printf("Please enter the file name\n");
-    for (; i < argc; i++) {
+    if (!fail_flags && i == argc) printf("Please enter the file name\n");
+    for (; !fail_flags && i < argc; i++) {
         FILE *fd = fopen(argv[i], "r");
         if (fd) {
             int start_line_flag = 1;
@@ -52,13 +52,17 @@ void s21_cat(int argc, char **argv) {
                 prew_prew = prew;
                 prew = *c;
                 if (flags[5] && apply_flag_T(*c)) continue;
-                fputs(c, stdout);
+                if (*c == '\0')
+                    fputc(*c, stdout);
+                else
+                    fputs(c, stdout);
                 memset(c, '\0', 5);
             }
         } else {
             perror("");
         }
     }
+    if (fail_flags) printf("incorrect flags\n");
 }
 
 void apply_flag_b(char prew, char c, int *counter_b) {
@@ -89,14 +93,19 @@ int apply_flag_n(int start_line_flag, char c, int *counter_n) {
 
 int apply_flag_s(char prew_prew, char prew, char c) { return c == '\n' && prew == '\n' && prew_prew == '\n'; }
 
-void s21_flags(char *arg, int *flags) {
-    if (!strcmp(arg, "--number-nonblank"))
+int s21_flags(char *arg, int *flags) {
+    int fail = 0;
+    if (strlen(arg) == 1 || strlen(arg) != strspn(arg, "-bvEnsTet")) fail = 1;
+    if (!strcmp(arg, "--number-nonblank")) {
         flags[0] = 1;
-    else if (!strcmp(arg, "--number"))
+        fail = 0;
+    } else if (!strcmp(arg, "--number")) {
         flags[3] = 1;
-    else if (!strcmp(arg, "--squeeze-blank"))
+        fail = 0;
+    } else if (!strcmp(arg, "--squeeze-blank")) {
         flags[4] = 1;
-    else {
+        fail = 0;
+    } else {
         if (strchr(arg, 'b')) flags[0] = 1;
         if (strchr(arg, 'v')) flags[1] = 1;
         if (strchr(arg, 'E')) flags[2] = 1;
@@ -112,4 +121,5 @@ void s21_flags(char *arg, int *flags) {
             flags[5] = 1;
         }
     }
+    return fail;
 }

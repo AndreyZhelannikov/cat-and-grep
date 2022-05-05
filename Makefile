@@ -1,5 +1,9 @@
 CC=gcc
 
+CFLAGS=-c -Wall -Wextra -std=c11 #-Werror
+MK=mkdir -p
+RM=rm -f
+
 CAT_TAR?=s21_cat
 CAT_TEST_TAR?=s21_cat_test
 
@@ -17,12 +21,25 @@ CAT_TEST_OBJ:=$(addprefix $(CAT_TEST_OBJ_DIR)/, $(notdir $(CAT_TEST_SRC:.c=.o)))
 CAT_INC=./cat/s21_cat.h
 CAT_TEST_INC=./cat/test/s21_cat_test.h
 
-CFLAGS=-c -Wall -Wextra -std=c11 #-Werror
+GREP_TAR?=s21_grep
+GREP_TEST_TAR?=s21_grep_test
 
-MK=mkdir -p
-RM=rm -f
+GREP_SRC_DIR?=./grep
+GREP_OBJ_DIR?=./grep/objs
 
-all: $(CAT_TAR) cat_test
+GREP_TEST_SRC_DIR?=./grep/test
+GREP_TEST_OBJ_DIR?=./grep/test/objs
+
+GREP_SRC=$(shell find $(GREP_SRC_DIR) -maxdepth 1 -name "*.c")
+GREP_TEST_SRC=$(shell find $(GREP_TEST_SRC_DIR) -maxdepth 1 -name "*.c")
+
+GREP_OBJ:=$(addprefix $(GREP_OBJ_DIR)/, $(notdir $(GREP_SRC:.c=.o)))
+GREP_TEST_OBJ:=$(addprefix $(GREP_TEST_OBJ_DIR)/, $(notdir $(GREP_TEST_SRC:.c=.o)))
+GREP_INC=./grep/s21_grep.h
+GREP_TEST_INC=./grep/test/s21_grep_test.h
+
+all: $(GREP_TAR) grep_test #$(CAT_TAR) cat_test
+#./s21_cat_test
 
 $(CAT_TAR): $(CAT_OBJ)
 	$(CC) $(CAT_OBJ) -o $(CAT_TAR) 
@@ -40,10 +57,30 @@ $(CAT_TEST_OBJ): $(CAT_TEST_OBJ_DIR)%.o: $(CAT_TEST_SRC_DIR)%.c $(CAT_TEST_INC) 
 	@$(MK) $(CAT_TEST_OBJ_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
 
+
+$(GREP_TAR): $(GREP_OBJ)
+	$(CC) $(GREP_OBJ) -o $(GREP_TAR) 
+
+grep_test: $(GREP_TEST_TAR)
+
+$(GREP_TEST_TAR): $(GREP_TEST_OBJ)
+	$(CC) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR)
+
+$(GREP_OBJ): $(GREP_OBJ_DIR)%.o: $(GREP_SRC_DIR)%.c $(GREP_INC) Makefile
+	@$(MK) $(GREP_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+
+$(GREP_TEST_OBJ): $(GREP_TEST_OBJ_DIR)%.o: $(GREP_TEST_SRC_DIR)%.c $(GREP_TEST_INC) Makefile
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+
+
 re: fclean all
 
 clean:
 	$(RM) -r $(CAT_OBJ_DIR)
+	$(RM) -r $(GREP_OBJ_DIR)
 
 fclean: clean
 	$(RM) $(CAT_TAR)
+	$(RM) $(GREP_TAR)

@@ -4,7 +4,7 @@
 #include <string.h>
 
 void s21_cat(int argc, char **argv);
-void s21_flags(char *arg, int *flags);
+int s21_flags(char *arg, int *flags);
 
 void apply_flag_b(char prew, char c, int *counter_b);
 void apply_flag_v(char *c);
