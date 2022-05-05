@@ -25,10 +25,11 @@ int main(int argc, char **argv) {
 // -T
 
 void s21_cat(int argc, char **argv) {
-    int flags[5] = {0};
+    int flags[6] = {0};
+    // memset(flags, 0, 6);
     int i = 1;
     for (; i < argc; i++) {
-        if (!strspn(argv[i], "-")) break;
+        if (strspn(argv[i], "-") == 0) break;
         s21_flags(argv[i], flags);
     }
     if (flags[0]) flags[3] = 0;
@@ -39,16 +40,17 @@ void s21_cat(int argc, char **argv) {
             int start_line_flag = 1;
             int counter_b = 1;
             int counter_n = 1;
-            char prew[2] = {'\n'};
+            char prew = '\n';
+            char prew_prew = '\n';
             char c[5] = {'\0'};
             while ((*c = fgetc(fd)) != EOF) {
-                if (flags[4] && apply_flag_s(prew[0], prew[1], *c)) continue;
-                if (flags[0]) apply_flag_b(prew[1], *c, &counter_b);
-                if (flags[1]) apply_flag_v(c);
-                if (flags[2]) apply_flag_E(*c);
+                if (flags[4] && apply_flag_s(prew_prew, prew, *c)) continue;
                 if (flags[3]) start_line_flag = apply_flag_n(start_line_flag, *c, &counter_n);
-                prew[0] = prew[1];
-                prew[1] = *c;
+                if (flags[0]) apply_flag_b(prew, *c, &counter_b);
+                if (flags[2]) apply_flag_E(*c);
+                if (flags[1]) apply_flag_v(c);
+                prew_prew = prew;
+                prew = *c;
                 if (flags[5] && apply_flag_T(*c)) continue;
                 fputs(c, stdout);
                 memset(c, '\0', 5);
