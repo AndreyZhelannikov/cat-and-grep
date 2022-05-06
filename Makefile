@@ -1,6 +1,6 @@
 CC=gcc
 
-ASAN:=-fsanitize=address
+ASAN:=-fsanitize=address -g
 CFLAGS=-c -Wall -Wextra -std=c11 #-Werror
 MK=mkdir -p
 RM=rm -f
