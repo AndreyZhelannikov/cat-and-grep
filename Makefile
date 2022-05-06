@@ -1,5 +1,6 @@
 CC=gcc
 
+ASAN:=-fsanitize=address
 CFLAGS=-c -Wall -Wextra -std=c11 #-Werror
 MK=mkdir -p
 RM=rm -f
@@ -59,12 +60,12 @@ $(CAT_TEST_OBJ): $(CAT_TEST_OBJ_DIR)%.o: $(CAT_TEST_SRC_DIR)%.c $(CAT_TEST_INC) 
 
 
 $(GREP_TAR): $(GREP_OBJ)
-	$(CC) $(GREP_OBJ) -o $(GREP_TAR) 
+	$(CC) $(ASAN) $(GREP_OBJ) -o $(GREP_TAR) 
 
 grep_test: $(GREP_TEST_TAR)
 
 $(GREP_TEST_TAR): $(GREP_TEST_OBJ)
-	$(CC) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR)
+	$(CC) $(ASAN) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR)
 
 $(GREP_OBJ): $(GREP_OBJ_DIR)%.o: $(GREP_SRC_DIR)%.c $(GREP_INC) Makefile
 	@$(MK) $(GREP_OBJ_DIR)
@@ -79,8 +80,12 @@ re: fclean all
 
 clean:
 	$(RM) -r $(CAT_OBJ_DIR)
+	$(RM) -r $(CAT_TEST_OBJ_DIR)
 	$(RM) -r $(GREP_OBJ_DIR)
+	$(RM) -r $(GREP_TEST_OBJ_DIR)
 
 fclean: clean
 	$(RM) $(CAT_TAR)
+	$(RM) $(CAT_TEST_TAR)
 	$(RM) $(GREP_TAR)
+	$(RM) $(GREP_TEST_TAR)

@@ -13,24 +13,50 @@ void s21_grep(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
         if (strspn(argv[i], "-")) {
             if (s21_grep_flags(argv[i], flags)) fail_flags = 1;
-            if (strchr(argv[i], 'f')) pattern_file_name = argv[i + 1];
-            if (strchr(argv[i], 'e')) pattern = argv[i + 1];
+            if (strchr(argv[i], 'f')) pattern_file_name = get_task_from_args(argc, argv, i, 'f');
+            if (strchr(argv[i], 'e')) pattern = get_task_from_args(argc, argv, i, 'e');
         }
     }
-    if (flags[8])
-        pattern = get_pattern_from_file(pattern_file_name);
-    else if (!flags[0])
-        pattern = get_pattern(argc, argv);
+    pattern = get_pattern(argc, argv, pattern_file_name, flags);
+
+    if (!fail_flags) {
+        for (int i = 1; i < argc; i++) {
+            if (!strspn(argv[i], "-") && strcmp(argv[i], pattern)) {
+                FILE *fd = fopen(argv[i], "r");
+                if (fd) {
+                    ;
+                } else if (!flags[7]) {
+                    perror("");
+                }
+            }
+        }
+    } else {
+        printf("incorrect flags\n");
+    }
 
     if (flags[8]) free(pattern);
 }
 
-char *get_pattern(int argc, char **argv) {
+char *get_task_from_args(int argc, char **argv, int i, char flag) {
+    char *result = NULL;
+    if (strchr(argv[i], flag) == argv[i] + strlen(argv[i]) - 1) {
+        if (i + 1 < argc) result = argv[i + 1];
+    } else
+        result = strchr(argv[i], 'f') + 1;
+    return result;
+}
+
+char *get_pattern(int argc, char **argv, char *pattern_file_name, int *flags) {
     char *pattern = NULL;
-    for (int i = 1; i < argc; i++) {
-        if (!strspn(argv[i], "-")) {
-            pattern = argv[i];
-            break;
+    if (flags[8]) {
+        pattern = get_pattern_from_file(pattern_file_name);
+        if (pattern == NULL && !flags[7]) perror("");
+    } else if (!flags[0]) {
+        for (int i = 1; i < argc; i++) {
+            if (!strspn(argv[i], "-")) {
+                pattern = argv[i];
+                break;
+            }
         }
     }
     return pattern;

@@ -63,7 +63,7 @@ void start_tests() {
 */
 
 void file_gen(void) {
-    int len = rand() % 10000;
+    int len = rand() % 1000;
     FILE *fd1 = fopen("tmp_test_file1", "w");
     FILE *fd2 = fopen("tmp_test_file2", "w");
     if (fd1 && fd2) {
