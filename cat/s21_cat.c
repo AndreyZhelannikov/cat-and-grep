@@ -30,7 +30,7 @@ void s21_cat(int argc, char **argv) {
     int i = 1;
     for (; i < argc; i++) {
         if (strspn(argv[i], "-") == 0) break;
-        if (s21_flags(argv[i], flags) == 1) fail_flags = 1;
+        if (s21_cat_flags(argv[i], flags) == 1) fail_flags = 1;
     }
     if (flags[0]) flags[3] = 0;
     if (!fail_flags && i == argc) printf("Please enter the file name\n");
@@ -93,7 +93,7 @@ int apply_flag_n(int start_line_flag, char c, int *counter_n) {
 
 int apply_flag_s(char prew_prew, char prew, char c) { return c == '\n' && prew == '\n' && prew_prew == '\n'; }
 
-int s21_flags(char *arg, int *flags) {
+int s21_cat_flags(char *arg, int *flags) {
     int fail = 0;
     if (strlen(arg) == 1 || strlen(arg) != strspn(arg, "-bvEnsTet")) fail = 1;
     if (!strcmp(arg, "--number-nonblank")) {
