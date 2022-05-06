@@ -26,60 +26,67 @@ void s21_grep(int argc, char **argv) {
         }
     }
     k = pattern_file_name ? count_lines(pattern_file_name) : 1;
-    patterns = malloc(sizeof(char *) * k);
-    if (patterns) {
-        for (int i = 0; i < k; i++) patterns[i] = NULL;
-        patterns[0] = pattern;
-        get_patterns(patterns, argc, argv, pattern_file_name, flags, &k);
-
-        if (!fail_flags) {
-            for (int i = 1; i < argc; i++) {
-                if (!strspn(argv[i], "-") && strcmp(argv[i], pattern) && strcmp()) {
-                    FILE *fd = fopen(argv[i], "r");
-                    if (fd) {
-                        ;
-                    } else if (!flags[7]) {
-                        perror("");
-                    }
-                }
-            }
+    if (k) {
+        patterns = malloc(sizeof(char *) * k);
+        if (patterns) {
+            for (int i = 0; i < k; i++) patterns[i] = NULL;
+            patterns[0] = pattern;
+            get_patterns(patterns, argc, argv, pattern_file_name, flags, k);
+            if (!fail_flags)
+                scan_files(argc, argv, patterns, pattern_file_name, flags, k);
+            else
+                printf("incorrect flags\n");
+            if (flags[8])
+                for (int i = 0; i < k; i++) free(patterns[i]);
+            free(patterns);
         } else {
-            printf("incorrect flags\n");
+            printf("malloc failed\n");
         }
+    } else {
+        if (!flags[7]) perror("");
+    }
+}
 
-    } else {
-        printf("malloc failed\n");
-    }
-    /*if (!fail_flags) {
-        for (int i = 1; i < argc; i++) {
-            if (!strspn(argv[i], "-") && strcmp(argv[i], pattern[0])) {
-                FILE *fd = fopen(argv[i], "r");
-                if (fd) {
-                    ;
-                } else if (!flags[7]) {
-                    perror("");
-                }
-            }
+void scan_files(int argc, char **argv, char **patterns, char *pattern_file_name, int *flags, int k) {
+    int fail = 1;
+    for (int i = 1; i < argc; i++) {
+        if (!strspn(argv[i], "-") && strcmp(argv[i], patterns[0]) &&
+            !(pattern_file_name && strcmp(argv[i], pattern_file_name))) {
+            seek(argv[i], patterns, flags, k);
+            fail = 0;
         }
-    } else {
-        printf("incorrect flags\n");
     }
-    */
-    // if (pattern != NULL) {
-    //} else {
-    //   printf("pattern = NULL\n");
-    //}
-    /*
-    if (flags[8]) {
+    if (fail) printf("No files found\n");  // read form stdin maybe ?
+}
+
+void seek(char *arg, char **patterns, int *flags, int k) {
+    int line_number = 0;
+    size_t size;
+    FILE *fd = fopen(arg, "r");
+    if (fd) {
         for (int i = 0; i < k; i++) {
-            if (pattern[i] != NULL) {
-                free(pattern[i]);
+            regex_t regex;
+            if (!regcomp(&regex, patterns[i], 0)) {
+                int file_len = count_lines(arg);
+                for (int i = 0; i < file_len; i++) {
+                    char *line = NULL;
+                    if (getline(&line, &size, fd) != -1) {
+                        if (regexec(&regex, line, 0, NULL, 0) == 0) {
+                            if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+                            printf("%s\n", line);
+                        }
+                    }
+                    free(line);
+                }
+                regfree(&regex);
             } else {
-                printf("%d NULL\n", i);
+                printf("Regex compilation error");
             }
         }
+        line_number++;
+    } else if (!flags[7]) {
+        perror("");
     }
-    */
 }
 
 char *get_pattern_from_args(int argc, char **argv, int i) {
@@ -100,9 +107,9 @@ char *get_pattern_file_name_from_args(int argc, char **argv, int i) {
     return res;
 }
 
-void get_patterns(char **patterns, int argc, char **argv, char *pattern_file_name, int *flags, int *k) {
+void get_patterns(char **patterns, int argc, char **argv, char *pattern_file_name, int *flags, int k) {
     if (flags[8]) {
-        get_patterns_from_file(patterns, pattern_file_name, *k);
+        get_patterns_from_file(patterns, pattern_file_name, k);
         if (patterns[0] == NULL && !flags[7]) perror("");
     } else if (!flags[0]) {
         for (int i = 1; i < argc; i++) {
