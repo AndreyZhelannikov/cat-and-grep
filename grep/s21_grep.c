@@ -80,7 +80,8 @@ void seek(char *arg, char **patterns, int *flags, int k) {
                 }
                 regfree(&regex);
             } else {
-                printf("Regex compilation error");
+                printf("Regex compilation error\n");
+                break;
             }
         }
         line_number++;
