@@ -50,85 +50,118 @@ void scan_files(int argc, char **argv, char **patterns, int *flags, int k) {
     int files_cnt = 0;
     int same = 0;
     for (int i = 1; i < argc; i++) {
-        if (!strspn(argv[i], "-") &&
-            !((strchr(argv[i], 'f') && strspn(argv[i], "-")) ||
-              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'f' && strspn(argv[i - 1], "-")) ||
-              (strchr(argv[i], 'e') && strspn(argv[i], "-")) ||
-              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'e' && strspn(argv[i - 1], "-")) ||
-              (!(flags[8] || flags[0]) && !strcmp(argv[i], patterns[0]) && (same--) >= 0))) {
+        if (the_great_judge(i, argv[i], argv[i - 1], patterns[0], &same, flags)) {
             fail = 0;
             files_cnt++;
         }
     }
+    if (fail) printf("No files found\n");  // read form stdin maybe ?
+    t_file files[files_cnt];
+    int file_number = 0;
     same = 0;
-    for (int i = 1; i < argc; i++) {
-        if (!strspn(argv[i], "-") &&
-            !((strchr(argv[i], 'f') && strspn(argv[i], "-")) ||
-              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'f' && strspn(argv[i - 1], "-")) ||
-              (strchr(argv[i], 'e') && strspn(argv[i], "-")) ||
-              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'e' && strspn(argv[i - 1], "-")) ||
-              (!(flags[8] || flags[0]) && !strcmp(argv[i], patterns[0]) && (same--) >= 0))) {
-            seek(argv[i], patterns, flags, k, files_cnt);
+    for (int i = 1; !fail && i < argc; i++) {
+        if (the_great_judge(i, argv[i], argv[i - 1], patterns[0], &same, flags)) {
+            seek(argv[i], patterns, flags, k, files_cnt, files + file_number);
+            file_number++;
         }
-        if (fail) printf("No files found\n");  // read form stdin maybe ?
+    }
+    if (flags[4]) {
+        for (int i = 0; i < files_cnt; i++) {
+            if (flags[3]) {
+                if (!flags[6]) printf("%s:", files[i].file_name);
+                printf("%d\n", files[i].mached);
+            }
+            if (files[i].mached) printf("%s\n", files[i].file_name);
+        }
     }
 }
 
-void seek(char *arg, char **patterns, int *flags, int k, int files_cnt) {
+// checks if arg is a file
+int the_great_judge(int i, char *argv_i, char *argv_i_1, char *pattern_0, int *same, int *flags) {
+    return (!strspn(argv_i, "-") &&
+            !((strchr(argv_i, 'f') && strspn(argv_i, "-")) ||
+              (i != 1 && argv_i_1[strlen(argv_i_1) - 1] == 'f' && strspn(argv_i_1, "-")) ||
+              (strchr(argv_i, 'e') && strspn(argv_i, "-")) ||
+              (i != 1 && argv_i_1[strlen(argv_i_1) - 1] == 'e' && strspn(argv_i_1, "-")) ||
+              (!(flags[8] || flags[0]) && !strcmp(argv_i, pattern_0) && ((*same)--) >= 0)));
+}
+
+void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *files) {
     int line_number = 0;
-    int line_mached = 0;
-    int files_mached = 0;
+    int lines_mached = 0;
     size_t size;
     FILE *fd = fopen(arg, "r");
     if (fd) {
+        files->file_name = arg;
+        files->mached = 0;
         char *line = NULL;
-        char *mached_files[files_cnt];
         int file_len = count_lines(arg);
         regex_t regex;
         for (int i = 0; i < file_len; i++) {
             if (getline(&line, &size, fd) != -1) {
                 line_number++;
                 if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+                int one_time_mach_flag = 1;
                 for (int i = 0; i < k; i++) {
-                    int one_time_mach_flag = 1;
-                    int one_time_printf_file_flag = 1;
-                    int comp_val;
-                    if (flags[1])
-                        comp_val = regcomp(&regex, patterns[i], REG_ICASE);
-                    else
-                        comp_val = regcomp(&regex, patterns[i], 0);
+                    int comp_val = do_regcomp(&regex, flags, patterns[i]);
                     if (!comp_val) {
                         int exec_val;
                         exec_val = regexec(&regex, line, 0, NULL, 0);
                         if ((!flags[2] && !exec_val) || (flags[2] && exec_val == REG_NOMATCH)) {
                             if (one_time_mach_flag) {
                                 one_time_mach_flag = 0;
-                                line_mached++;
+                                lines_mached++;
                             }
-                            if (flags[4] && one_time_printf_file_flag) {
-                                one_time_printf_file_flag = 0;
-                                mached_files[files_mached++] = arg;
-                            } else if (!flags[3] && !flags[4]) {
-                                if (files_cnt > 1) printf("%s:", arg);
+                            files->mached = 1;
+                            if (!flags[4] && !flags[3] && !flags[9]) {
+                                if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
+                                if (flags[5]) printf("%d:", line_number);
                                 printf("%s\n", line);
+                            } else if (flags[9]) {
+                                if (files_cnt > 1) printf("%s:", files->file_name);
+                                printf_only_match(&regex, line);
                             }
                         }
                     }
                 }
             }
         }
+        if (flags[3] && !flags[4]) {
+            if (files_cnt > 1) printf("%s:", files->file_name);
+            printf("%d\n", lines_mached);
+        }
         regfree(&regex);
         free(line);
         fclose(fd);
-        if (flags[4]) {
-            printf("%d", files_mached);
-            for (int i = 0; i < files_mached; i++) printf("%s\n", mached_files[i]);
-        } else if (flags[3]) {
-            printf("%d\n", line_mached);
-        }
     } else if (!flags[7]) {
         perror("");
     }
+}
+
+void printf_only_match(regex_t *regex, char *line) {
+    regmatch_t match;
+    size_t offset = 0;
+    size_t len = strlen(line);
+    int eflags = 0;
+    if (line) {
+        while (regexec(regex, line + offset, 1, &match, eflags) == 0) {
+            eflags = REG_NOTBOL;
+            for (size_t i = offset + match.rm_so; i < offset + match.rm_eo; i++) printf("%c", line[i]);
+            printf("\n");
+            offset += match.rm_eo;
+            if (match.rm_so == match.rm_eo) offset += 1;
+            if (offset > len) break;
+        }
+    }
+}
+
+int do_regcomp(regex_t *regex, int *flags, char *pattern) {
+    int comp_val;
+    if (flags[1])
+        comp_val = regcomp(regex, pattern, REG_ICASE);
+    else
+        comp_val = regcomp(regex, pattern, 0);
+    return comp_val;
 }
 
 char *get_e_pattern_from_args(int argc, char **argv, int i) {

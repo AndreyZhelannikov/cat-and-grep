@@ -21,13 +21,8 @@ void run_testcase(Suite *testcase) {
 }
 
 void run_tests(void) {
-    Suite *list_cases[] = {suite_base(), suite_e(), suite_i(), suite_v(), suite_c(),
-                           // suite_l(),
-                           // suite_n(),
-                           // suite_h(),
-                           suite_s(), suite_f(),
-                           // suite_o(),
-                           // suite_combinations(),
+    Suite *list_cases[] = {suite_base(), suite_e(), suite_i(), suite_v(), suite_c(), suite_l(),
+                           suite_n(),    suite_h(), suite_s(), suite_f(), suite_o(), suite_combinations(),
                            NULL};
 
     for (Suite **current_testcase = list_cases; *current_testcase != NULL; current_testcase++) {
