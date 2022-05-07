@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": true,
+      "cwd": "/Users/capricey/cat-and-grep",
+      "environment": [],
+      "program": "/Users/capricey/cat-and-grep/build/Debug/outDebug",
+      "internalConsoleOptions": "openOnSessionStart",
+      "MIMode": "gdb",
+      "console": "integratedTerminal"
+    }
+  ]
+}

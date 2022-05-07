@@ -1,7 +1,7 @@
 CC=gcc
 
 ASAN:=-fsanitize=address -g
-CFLAGS=-c -Wall -Wextra -std=c11 #-Werror
+CFLAGS=-c -Wall -Wextra -std=c11 -g #-Werror
 MK=mkdir -p
 RM=rm -f
 
@@ -40,6 +40,7 @@ GREP_INC=./grep/s21_grep.h
 GREP_TEST_INC=./grep/test/s21_grep_test.h
 
 all: $(GREP_TAR) grep_test #$(CAT_TAR) cat_test
+	./s21_grep_test
 #./s21_cat_test
 
 $(CAT_TAR): $(CAT_OBJ)
@@ -65,7 +66,7 @@ $(GREP_TAR): $(GREP_OBJ)
 grep_test: $(GREP_TEST_TAR)
 
 $(GREP_TEST_TAR): $(GREP_TEST_OBJ)
-	$(CC) $(ASAN) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR)
+	$(CC) $(ASAN) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR) -lcheck
 
 $(GREP_OBJ): $(GREP_OBJ_DIR)%.o: $(GREP_SRC_DIR)%.c $(GREP_INC) Makefile
 	@$(MK) $(GREP_OBJ_DIR)

@@ -10,34 +10,32 @@ int main(int argc, char **argv) {
 }
 
 void s21_grep(int argc, char **argv) {
-    char *pattern = NULL;
-    char **patterns = NULL;
-    char *pattern_file_name = NULL;
-    int k = 0;
+    char *e_patterns[(argc - 1) / 2];
+    char *file_names[(argc - 1) / 2];
+    int k = 0, f = 0, e = 0;
     int flags[10] = {0};
     int fail_flags = 0;
-    for (int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++)
         if (strspn(argv[i], "-")) {
             if (s21_grep_flags(argv[i], flags)) fail_flags = 1;
-            if (strchr(argv[i], 'f')) {
-                pattern_file_name = get_pattern_file_name_from_args(argc, argv, i);
-            }
-            if (strchr(argv[i], 'e')) pattern = get_pattern_from_args(argc, argv, i);
+            if (strchr(argv[i], 'f')) file_names[f++] = get_pattern_file_name_from_args(argc, argv, i);
+            if (strchr(argv[i], 'e')) e_patterns[e++] = get_e_pattern_from_args(argc, argv, i);
         }
-    }
-    k = pattern_file_name ? count_lines(pattern_file_name) : 1;
+    int offset = k = e;
+    k += (e == 0 && f == 0);
+    for (int i = 0; i < f; i++) k += count_lines(file_names[i]);
     if (k) {
-        patterns = malloc(sizeof(char *) * k);
+        char **patterns = malloc(sizeof(char *) * (k));
         if (patterns) {
             for (int i = 0; i < k; i++) patterns[i] = NULL;
-            patterns[0] = pattern;
-            get_patterns(patterns, argc, argv, pattern_file_name, flags, k);
-            if (!fail_flags)
-                scan_files(argc, argv, patterns, pattern_file_name, flags, k);
-            else
-                printf("incorrect flags\n");
+            for (int i = 0; i < e; i++) patterns[i] = e_patterns[i];
             if (flags[8])
-                for (int i = 0; i < k; i++) free(patterns[i]);
+                get_patterns_from_files(patterns, file_names, f, &offset, flags);
+            else if (e == 0)
+                patterns[offset] = get_pattern_form_args(argc, argv);
+            if (patterns[0]) scan_files(argc, argv, patterns, flags, k);
+            if (flags[8])
+                for (int i = e; i < k; i++) free(patterns[i]);
             free(patterns);
         } else {
             printf("malloc failed\n");
@@ -47,50 +45,93 @@ void s21_grep(int argc, char **argv) {
     }
 }
 
-void scan_files(int argc, char **argv, char **patterns, char *pattern_file_name, int *flags, int k) {
+void scan_files(int argc, char **argv, char **patterns, int *flags, int k) {
     int fail = 1;
+    int files_cnt = 0;
+    int same = 0;
     for (int i = 1; i < argc; i++) {
-        if (!strspn(argv[i], "-") && strcmp(argv[i], patterns[0]) &&
-            !(pattern_file_name && strcmp(argv[i], pattern_file_name))) {
-            seek(argv[i], patterns, flags, k);
+        if (!strspn(argv[i], "-") &&
+            !((strchr(argv[i], 'f') && strspn(argv[i], "-")) ||
+              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'f' && strspn(argv[i - 1], "-")) ||
+              (strchr(argv[i], 'e') && strspn(argv[i], "-")) ||
+              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'e' && strspn(argv[i - 1], "-")) ||
+              (!(flags[8] || flags[0]) && !strcmp(argv[i], patterns[0]) && (same--) >= 0))) {
             fail = 0;
+            files_cnt++;
         }
     }
-    if (fail) printf("No files found\n");  // read form stdin maybe ?
+    same = 0;
+    for (int i = 1; i < argc; i++) {
+        if (!strspn(argv[i], "-") &&
+            !((strchr(argv[i], 'f') && strspn(argv[i], "-")) ||
+              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'f' && strspn(argv[i - 1], "-")) ||
+              (strchr(argv[i], 'e') && strspn(argv[i], "-")) ||
+              (i != 1 && argv[i - 1][strlen(argv[i - 1]) - 1] == 'e' && strspn(argv[i - 1], "-")) ||
+              (!(flags[8] || flags[0]) && !strcmp(argv[i], patterns[0]) && (same--) >= 0))) {
+            seek(argv[i], patterns, flags, k, files_cnt);
+        }
+        if (fail) printf("No files found\n");  // read form stdin maybe ?
+    }
 }
 
-void seek(char *arg, char **patterns, int *flags, int k) {
+void seek(char *arg, char **patterns, int *flags, int k, int files_cnt) {
     int line_number = 0;
+    int line_mached = 0;
+    int files_mached = 0;
     size_t size;
     FILE *fd = fopen(arg, "r");
     if (fd) {
-        for (int i = 0; i < k; i++) {
-            regex_t regex;
-            if (!regcomp(&regex, patterns[i], 0)) {
-                int file_len = count_lines(arg);
-                for (int i = 0; i < file_len; i++) {
-                    char *line = NULL;
-                    if (getline(&line, &size, fd) != -1) {
-                        if (regexec(&regex, line, 0, NULL, 0) == 0) {
-                            if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
-                            printf("%s\n", line);
+        char *line = NULL;
+        char *mached_files[files_cnt];
+        int file_len = count_lines(arg);
+        regex_t regex;
+        for (int i = 0; i < file_len; i++) {
+            if (getline(&line, &size, fd) != -1) {
+                line_number++;
+                if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+                for (int i = 0; i < k; i++) {
+                    int one_time_mach_flag = 1;
+                    int one_time_printf_file_flag = 1;
+                    int comp_val;
+                    if (flags[1])
+                        comp_val = regcomp(&regex, patterns[i], REG_ICASE);
+                    else
+                        comp_val = regcomp(&regex, patterns[i], 0);
+                    if (!comp_val) {
+                        int exec_val;
+                        exec_val = regexec(&regex, line, 0, NULL, 0);
+                        if ((!flags[2] && !exec_val) || (flags[2] && exec_val == REG_NOMATCH)) {
+                            if (one_time_mach_flag) {
+                                one_time_mach_flag = 0;
+                                line_mached++;
+                            }
+                            if (flags[4] && one_time_printf_file_flag) {
+                                one_time_printf_file_flag = 0;
+                                mached_files[files_mached++] = arg;
+                            } else if (!flags[3] && !flags[4]) {
+                                if (files_cnt > 1) printf("%s:", arg);
+                                printf("%s\n", line);
+                            }
                         }
                     }
-                    free(line);
                 }
-                regfree(&regex);
-            } else {
-                printf("Regex compilation error\n");
-                break;
             }
         }
-        line_number++;
+        regfree(&regex);
+        free(line);
+        fclose(fd);
+        if (flags[4]) {
+            printf("%d", files_mached);
+            for (int i = 0; i < files_mached; i++) printf("%s\n", mached_files[i]);
+        } else if (flags[3]) {
+            printf("%d\n", line_mached);
+        }
     } else if (!flags[7]) {
         perror("");
     }
 }
 
-char *get_pattern_from_args(int argc, char **argv, int i) {
+char *get_e_pattern_from_args(int argc, char **argv, int i) {
     char *res = NULL;
     if (strchr(argv[i], 'e') == argv[i] + strlen(argv[i]) - 1) {
         if (i + 1 < argc) res = argv[i + 1];
@@ -108,40 +149,47 @@ char *get_pattern_file_name_from_args(int argc, char **argv, int i) {
     return res;
 }
 
-void get_patterns(char **patterns, int argc, char **argv, char *pattern_file_name, int *flags, int k) {
-    if (flags[8]) {
-        get_patterns_from_file(patterns, pattern_file_name, k);
-        if (patterns[0] == NULL && !flags[7]) perror("");
-    } else if (!flags[0]) {
-        for (int i = 1; i < argc; i++) {
-            if (!strspn(argv[i], "-")) {
-                patterns[0] = argv[i];
-                break;
+char *get_pattern_form_args(int argc, char **argv) {
+    char *res = NULL;
+    for (int i = 1; i < argc; i++) {
+        if (!strspn(argv[i], "-")) {
+            res = argv[i];
+            break;
+        }
+    }
+    return res;
+}
+void get_patterns_from_files(char **patterns, char **file_names, int f, int *offset, int *flags) {
+    for (int i = 0; i < f; i++) {
+        int start = *offset;
+        int len = count_lines(file_names[i]);
+        FILE *fd = fopen(file_names[i], "r");
+        size_t size = 0;
+        if (fd) {
+            for (int i = start; i < start + len; i++) {
+                getline(&patterns[i], &size, fd);
+                if (patterns[i][strlen(patterns[i]) - 1] == '\n') patterns[i][strlen(patterns[i]) - 1] = '\0';
+                (*offset)++;
             }
+            fclose(fd);
+        } else if (flags[7]) {
+            perror("");
+            break;
         }
     }
 }
 
-void get_patterns_from_file(char **patterns, char *pattern_file_name, int k) {
-    for (int i = 0; i < k; i++) patterns[i] = NULL;
-    FILE *fd = fopen(pattern_file_name, "r");
-    size_t size = 0;
-    if (fd)
-        for (int i = 0; i < k; i++) {
-            getline(&patterns[i], &size, fd);
-            if (patterns[i][strlen(patterns[i]) - 1] == '\n') patterns[i][strlen(patterns[i]) - 1] = '\0';
-        }
-}
-
 int count_lines(char *filename) {
     int cnt = 0;
-    char c;
-    FILE *fd = fopen(filename, "r");
-    if (fd) {
-        cnt++;
-        while ((c = fgetc(fd)) != EOF)
-            if (c == '\n') cnt++;
-        fclose(fd);
+    if (filename) {
+        char c;
+        FILE *fd = fopen(filename, "r");
+        if (fd) {
+            cnt++;
+            while ((c = fgetc(fd)) != EOF)
+                if (c == '\n') cnt++;
+            fclose(fd);
+        }
     }
     return cnt;
 }
