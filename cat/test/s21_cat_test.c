@@ -11,11 +11,11 @@ void start_tests() {
     for (int i = 0; i < len; i++) {
         memset(buff[i], '\0', 32);
         if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[0]);
-        if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[1]);
-        if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[2]);
-        if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[3]);
-        if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[4]);
-        if (i >> 0 & 1) strcat(buff[i], s21_mac_flags[5]);
+        if (i >> 1 & 1) strcat(buff[i], s21_mac_flags[1]);
+        if (i >> 2 & 1) strcat(buff[i], s21_mac_flags[2]);
+        if (i >> 3 & 1) strcat(buff[i], s21_mac_flags[3]);
+        if (i >> 4 & 1) strcat(buff[i], s21_mac_flags[4]);
+        if (i >> 5 & 1) strcat(buff[i], s21_mac_flags[5]);
     }
     for (int i = 0; i < 64; i++) {
         file_gen();
@@ -63,7 +63,7 @@ void start_tests() {
 */
 
 void file_gen(void) {
-    int len = rand() % 1000;
+    int len = rand() % 10000;
     FILE *fd1 = fopen("tmp_test_file1", "w");
     FILE *fd2 = fopen("tmp_test_file2", "w");
     if (fd1 && fd2) {

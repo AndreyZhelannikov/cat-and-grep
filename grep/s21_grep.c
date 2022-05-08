@@ -68,7 +68,7 @@ void scan_files(int argc, char **argv, char **patterns, int *flags, int k) {
     if (flags[4]) {
         for (int i = 0; i < files_cnt; i++) {
             if (flags[3]) {
-                if (!flags[6]) printf("%s:", files[i].file_name);
+                if (!flags[6] && files_cnt > 1) printf("%s:", files[i].file_name);
                 printf("%d\n", files[i].mached);
             }
             if (files[i].mached) printf("%s\n", files[i].file_name);
@@ -117,9 +117,9 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
                                 if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
                                 if (flags[5]) printf("%d:", line_number);
                                 printf("%s\n", line);
-                            } else if (flags[9]) {
+                            } else if (flags[9] && !flags[3] && !flags[4]) {
                                 if (files_cnt > 1) printf("%s:", files->file_name);
-                                printf_only_match(&regex, line);
+                                printf_only_match(&regex, line, line_number, flags);
                             }
                         }
                     }
@@ -127,7 +127,7 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
             }
         }
         if (flags[3] && !flags[4]) {
-            if (files_cnt > 1) printf("%s:", files->file_name);
+            if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
             printf("%d\n", lines_mached);
         }
         regfree(&regex);
@@ -138,12 +138,13 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
     }
 }
 
-void printf_only_match(regex_t *regex, char *line) {
+void printf_only_match(regex_t *regex, char *line, int line_number, int *flags) {
     regmatch_t match;
     size_t offset = 0;
     size_t len = strlen(line);
     int eflags = 0;
     if (line) {
+        if (flags[5]) printf("%d:", line_number);
         while (regexec(regex, line + offset, 1, &match, eflags) == 0) {
             eflags = REG_NOTBOL;
             for (size_t i = offset + match.rm_so; i < offset + match.rm_eo; i++) printf("%c", line[i]);
