@@ -7,6 +7,7 @@
 typedef struct s_file {
     char *file_name;
     int mached;
+    int valid;
 } t_file;
 
 void s21_grep(int argc, char **argv);
@@ -21,4 +22,4 @@ int count_lines(char *filename);
 int s21_grep_flags(char *arg, int *flags);
 int the_great_judge(int i, char *argv_i, char *argv_i_1, char *pattern_0, int *same, int *flags);
 int do_regcomp(regex_t *regex, int *flags, char *pattern);
-void printf_only_match(regex_t *regex, char *line, int line_number, int *flags);
+int printf_only_match(regex_t *regex, char *line, int line_number, int *flags);

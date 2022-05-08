@@ -67,11 +67,13 @@ void scan_files(int argc, char **argv, char **patterns, int *flags, int k) {
     }
     if (flags[4]) {
         for (int i = 0; i < files_cnt; i++) {
-            if (flags[3]) {
+            if (flags[3] && files[i].valid) {
                 if (!flags[6] && files_cnt > 1) printf("%s:", files[i].file_name);
                 printf("%d\n", files[i].mached);
             }
-            if (files[i].mached) printf("%s\n", files[i].file_name);
+            if ((files[i].mached && files[i].valid) || (!files[i].mached && flags[2] && files[i].valid)) {
+                if (files[i].mached) printf("%s\n", files[i].file_name);
+            }
         }
     }
 }
@@ -91,9 +93,9 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
     int lines_mached = 0;
     size_t size;
     FILE *fd = fopen(arg, "r");
+    files->file_name = arg;
+    files->mached = 0;
     if (fd) {
-        files->file_name = arg;
-        files->mached = 0;
         char *line = NULL;
         int file_len = count_lines(arg);
         regex_t regex;
@@ -102,58 +104,93 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
                 line_number++;
                 if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
                 int one_time_mach_flag = 1;
+                int line_mach = 0;
+                int comp_val;
                 for (int i = 0; i < k; i++) {
-                    int comp_val = do_regcomp(&regex, flags, patterns[i]);
+                    comp_val = do_regcomp(&regex, flags, patterns[i]);
                     if (!comp_val) {
-                        int exec_val;
-                        exec_val = regexec(&regex, line, 0, NULL, 0);
+                        int exec_val = regexec(&regex, line, 0, NULL, 0);
                         if ((!flags[2] && !exec_val) || (flags[2] && exec_val == REG_NOMATCH)) {
                             if (one_time_mach_flag) {
+                                files->mached = 1;
+                                line_mach = 1;
                                 one_time_mach_flag = 0;
                                 lines_mached++;
                             }
-                            files->mached = 1;
-                            if (!flags[4] && !flags[3] && !flags[9]) {
-                                if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
-                                if (flags[5]) printf("%d:", line_number);
-                                printf("%s\n", line);
-                            } else if (flags[9] && !flags[3] && !flags[4]) {
-                                if (files_cnt > 1) printf("%s:", files->file_name);
-                                printf_only_match(&regex, line, line_number, flags);
+                        } else {
+                            if (flags[2]) {
+                                line_mach = 0;
+                                files->mached = 0;
+                                if (one_time_mach_flag == 0) lines_mached--;
+                                break;
                             }
                         }
                     }
                 }
+                if (line_mach) {
+                    if (!flags[4] && !flags[3]) {
+                        if (!flags[9]) {
+                            if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
+                            if (flags[5]) printf("%d:", line_number);
+                            if (flags[2] && line_mach == 0) {
+                                printf("%s\n", line);
+                            } else
+                                printf("%s\n", line);
+                        } else if (flags[9]) {
+                            if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
+                            for (int i = 0; i < k; i++) {
+                                if (!(comp_val = do_regcomp(&regex, flags, patterns[i]))) {
+                                    if (printf_only_match(&regex, line, line_number, flags)) break;
+                                    // printf_only_match(&regex, line, line_number, flags);
+                                }
+                            }
+                        }
+                    }
+                }
+                regfree(&regex);
             }
         }
         if (flags[3] && !flags[4]) {
             if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
             printf("%d\n", lines_mached);
         }
-        regfree(&regex);
         free(line);
         fclose(fd);
-    } else if (!flags[7]) {
-        perror("");
+    } else {
+        files->valid = 0;
+        if (!flags[7]) perror("");
     }
 }
 
-void printf_only_match(regex_t *regex, char *line, int line_number, int *flags) {
+int printf_only_match(regex_t *regex, char *line, int line_number, int *flags) {
+    int res = 0;
     regmatch_t match;
     size_t offset = 0;
     size_t len = strlen(line);
     int eflags = 0;
+    int one_time_line_number = 1;
     if (line) {
-        if (flags[5]) printf("%d:", line_number);
-        while (regexec(regex, line + offset, 1, &match, eflags) == 0) {
+        int check;
+        while (((check = regexec(regex, line + offset, 1, &match, eflags)) == 0 && !flags[2]) ||
+               (flags[2] && check == REG_NOMATCH)) {
+            if (flags[5] && one_time_line_number) printf("%d:", line_number);
+            one_time_line_number = 0;
             eflags = REG_NOTBOL;
-            for (size_t i = offset + match.rm_so; i < offset + match.rm_eo; i++) printf("%c", line[i]);
+            if (!flags[2] && !check) {
+                for (size_t i = offset + match.rm_so; i < offset + match.rm_eo; i++) printf("%c", line[i]);
+                res = 1;
+            } else if (check == REG_NOMATCH) {
+                res = 1;
+                printf("%s\n", line);
+                break;
+            }
             printf("\n");
             offset += match.rm_eo;
             if (match.rm_so == match.rm_eo) offset += 1;
             if (offset > len) break;
         }
     }
+    return res;
 }
 
 int do_regcomp(regex_t *regex, int *flags, char *pattern) {

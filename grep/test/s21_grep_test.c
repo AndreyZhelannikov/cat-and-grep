@@ -13,8 +13,7 @@ void run_testcase(Suite *testcase) {
     counter_testcase++;
 
     SRunner *sr = srunner_create(testcase);
-
-    // srunner_set_fork_status(sr, CK_NOFORK);
+    srunner_set_fork_status(sr, CK_NOFORK);
     srunner_run_all(sr, CK_NORMAL);
 
     srunner_free(sr);
