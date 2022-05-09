@@ -10,6 +10,11 @@ typedef struct s_file {
     int valid;
 } t_file;
 
+typedef struct s_pattern {
+    char *pattern;
+    int is_file_name;
+} t_pattern;
+
 void s21_grep(int argc, char **argv);
 
 void scan_files(int argc, char **argv, char **patterns, int *flags, int k);

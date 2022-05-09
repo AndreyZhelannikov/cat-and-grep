@@ -138,9 +138,13 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
                                 printf("%s\n", line);
                         } else if (flags[9]) {
                             if (files_cnt > 1 && !flags[6]) printf("%s:", files->file_name);
+                            int one_time_line_number = 1;
                             for (int i = 0; i < k; i++) {
                                 if (!(comp_val = do_regcomp(&regex, flags, patterns[i]))) {
-                                    if (printf_only_match(&regex, line, line_number, flags)) break;
+                                    if (flags[5] && one_time_line_number) printf("%d:", line_number);
+                                    one_time_line_number = 0;
+                                    if (printf_only_match(&regex, line, line_number, flags))
+                                        if (flags[2]) break;
                                     // printf_only_match(&regex, line, line_number, flags);
                                 }
                             }
@@ -168,13 +172,10 @@ int printf_only_match(regex_t *regex, char *line, int line_number, int *flags) {
     size_t offset = 0;
     size_t len = strlen(line);
     int eflags = 0;
-    int one_time_line_number = 1;
     if (line) {
         int check;
         while (((check = regexec(regex, line + offset, 1, &match, eflags)) == 0 && !flags[2]) ||
                (flags[2] && check == REG_NOMATCH)) {
-            if (flags[5] && one_time_line_number) printf("%d:", line_number);
-            one_time_line_number = 0;
             eflags = REG_NOTBOL;
             if (!flags[2] && !check) {
                 for (size_t i = offset + match.rm_so; i < offset + match.rm_eo; i++) printf("%c", line[i]);
