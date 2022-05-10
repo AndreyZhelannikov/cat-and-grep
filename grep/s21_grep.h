@@ -7,6 +7,7 @@
 typedef struct s_file {
     char *file_name;
     int mached;
+    int mached_all;
     int valid;
 } t_file;
 

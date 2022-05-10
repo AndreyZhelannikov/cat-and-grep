@@ -11,7 +11,6 @@ void run_testcase(Suite *testcase) {
     if (counter_testcase > 1) putchar('\n');
     printf("%s%d%s", "CURRENT TEST: ", counter_testcase, "\n");
     counter_testcase++;
-
     SRunner *sr = srunner_create(testcase);
     srunner_set_fork_status(sr, CK_NOFORK);
     srunner_run_all(sr, CK_NORMAL);

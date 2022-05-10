@@ -67,12 +67,14 @@ void scan_files(int argc, char **argv, char **patterns, int *flags, int k) {
     }
     if (flags[4]) {
         for (int i = 0; i < files_cnt; i++) {
-            if (flags[3] && files[i].valid) {
-                if (!flags[6] && files_cnt > 1) printf("%s:", files[i].file_name);
-                printf("%d\n", files[i].mached);
-            }
-            if ((files[i].mached && files[i].valid) || (!files[i].mached && flags[2] && files[i].valid)) {
-                if (files[i].mached) printf("%s\n", files[i].file_name);
+            if (files[i].valid) {
+                if (flags[3]) {
+                    if (!flags[6] && files_cnt > 1) printf("%s:", files[i].file_name);
+                    printf("%d\n", files[i].mached);
+                }
+                if ((files[i].mached) || (!files[i].mached && flags[2])) {
+                    if (files[i].mached) printf("%s\n", files[i].file_name);
+                }
             }
         }
     }
@@ -96,6 +98,7 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
     files->file_name = arg;
     files->mached = 0;
     if (fd) {
+        files->valid = 1;
         char *line = NULL;
         int file_len = count_lines(arg);
         regex_t regex;
@@ -120,7 +123,7 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
                         } else {
                             if (flags[2]) {
                                 line_mach = 0;
-                                files->mached = 0;
+                                // files->mached = 0;
                                 if (one_time_mach_flag == 0) lines_mached--;
                                 break;
                             }
@@ -145,7 +148,6 @@ void seek(char *arg, char **patterns, int *flags, int k, int files_cnt, t_file *
                                     one_time_line_number = 0;
                                     if (printf_only_match(&regex, line, line_number, flags))
                                         if (flags[2]) break;
-                                    // printf_only_match(&regex, line, line_number, flags);
                                 }
                             }
                         }
