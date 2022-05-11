@@ -12,7 +12,7 @@ stop = 0
 # 1 или 0 показывать расшириный вывод ошибки
 more = 1
 # 1 или 0 если показывать в конце список комманд
-show_log = 1
+show_log = 0
 # любый символы остановки вывода
 quit_command = ['q', 'z']
 
@@ -27,7 +27,7 @@ tmp_file = '0_{}.res'
 flags = [
     ('-e', 1),
     ('-i', 0),
-    # ('-v', 0),
+    ('-v', 0),
     ('-c', 0),
     ('-l', 0),
     ('-n', 0),
@@ -42,6 +42,11 @@ files = [
     'grep_file2',
     'grep_file3',
     'grep_file4',
+	'void',
+	'text',
+	'v2',
+	'Lorem',
+	'char',
 ]
 
 files_with_patterns = [] + files
@@ -52,7 +57,10 @@ patterns = [
     'is',
     'modify',
     'Back-Cover',
-    '.Texts',
+	'void',
+	'Lorem',
+	'char',
+    'Texts',
 ] + files
 
 
@@ -91,23 +99,41 @@ def is_data():
 
 def get_argv(flag: str, type: int) -> str:
     if type == 2:
-        flag += f'{(" " if 1 else "")}{choice(files_with_patterns)}'
+        flag += f'{(" " if randrange(0, 2) else "")}{choice(files_with_patterns)}'
     if type == 1:
-        flag += f'{(" " if 1 else "")}{choice(patterns)}'
+        flag += f'{(" " if randrange(0, 2) else "")}{choice(patterns)}'
 
     return flag
 
 
-def run_test(command_1: str, command_2: str) -> None:
+def get_persent() -> str:
+    res = f'{bcolors.BOLD}\t{bcolors.OKBLUE}{TEST_COUNT}{bcolors.ENDC}\t/\t{bcolors.OKGREEN}{TEST_COUNT - TEST_COUNT_FAILED}{bcolors.ENDC}\t/\t{bcolors.FAIL}{TEST_COUNT_FAILED}{bcolors.ENDC}{bcolors.ENDC}\n'
+    if TEST_COUNT_FAILED:
+        persent = ((TEST_COUNT - TEST_COUNT_FAILED) / TEST_COUNT) * 100
+    else:
+        persent = 100
+
+    if persent > 80:
+        res += f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.OKGREEN}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}'
+    elif persent > 50:
+        res += f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.WARNING}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}'
+    else:
+        res += f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.FAIL}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}'
+    return res
+
+
+def run_test(command_1: str, command_2: str) -> int:
     global TEST_COUNT, TEST_COUNT_FAILED
 
     TEST_COUNT += 1
 
-    system(command_1)
-    system(command_2)
+    a = system(command_1)
+    b = system(command_2)
+    a = 0
+    b = 0
     diff_command = f'diff {s21_grep_file} {grep_file} > {diff_file}'
 
-    if system(diff_command):
+    if a == b and system(diff_command):
         if show_log:
             test_error.append((command_1, command_2))
         print()
@@ -135,10 +161,20 @@ def run_test(command_1: str, command_2: str) -> None:
         system(diff_command)
         print(diff_file)
         print()
-        if stop:
-            input()
+        if stop and input() in quit_command:
+            return -1
         TEST_COUNT_FAILED += 1
+    elif a != b:
+        print(f"{bcolors.BOLD}{bcolors.OKBLUE}\t\tCRASH\t\t{bcolors.ENDC}{bcolors.ENDC}")
+        print(command_1)
+        print(command_2)
+        print(diff_command)
+        print(f'\ns21_grep={a}\t'
+              f'grep={b}\n')
+        print('\t\tWAIT 3 SEC\t\t')
+        sleep(3)
     else:
+        print(get_persent())
         print(f'{bcolors.BOLD}{bcolors.OKBLUE}TEST{bcolors.ENDC} {bcolors.OKGREEN}{TEST_COUNT}{bcolors.ENDC}: {bcolors.OKGREEN}{"SUCCESS"}{bcolors.ENDC}{bcolors.ENDC}')
         print()
 
@@ -160,13 +196,13 @@ def simple_test():
         argv = ' '.join(argv)
 
         run_test(f'{s21_grep} {argv} > {s21_grep_file}',
-                 f'{grep} {argv} > {grep_file}')
+                 f'{grep} --color=never {argv} > {grep_file}')
 
 
 def hard_test():
     global _flags, _files
     # count = 0
-    for i in range(round(len(flags) / 2), len(flags)):
+    for i in range(2, len(flags)):
         for list_arg_m in combinations_with_replacement(flags, i):
             for list_arg in (set(list_arg_m), list_arg_m):
                 list_arg = list(list_arg)
@@ -191,8 +227,9 @@ def hard_test():
                     argv.insert(0, choice(patterns))
                 argv = ' '.join(argv)
 
-                run_test(f'{s21_grep} {argv} > {s21_grep_file}',
-                         f'{grep} {argv} > {grep_file}')
+                res = run_test(f'{s21_grep} {argv} > {s21_grep_file}', f'{grep} --color=never {argv} > {grep_file}')
+                if res == -1:
+                    return
                 if is_data():
                     c = stdin.read(1)
 
@@ -219,17 +256,7 @@ if __name__ == '__main__':
         print(f'{bcolors.BOLD}{bcolors.OKBLUE}SUCCESS: \t{bcolors.ENDC}{bcolors.OKGREEN}{TEST_COUNT - TEST_COUNT_FAILED}{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}')
         print(f'{bcolors.BOLD}{bcolors.WARNING}FAILED: \t{bcolors.ENDC}{bcolors.FAIL}{TEST_COUNT_FAILED}{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}')
 
-        if TEST_COUNT_FAILED:
-            persent = ((TEST_COUNT - TEST_COUNT_FAILED) / TEST_COUNT) * 100
-        else:
-            persent = 100
-
-        if persent > 80:
-            print(f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.OKGREEN}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}')
-        elif persent > 50:
-            print(f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.WARNING}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}')
-        else:
-            print(f'{bcolors.BOLD}{bcolors.WARNING}PERCENT: \t{bcolors.ENDC}{bcolors.FAIL}{persent}%{bcolors.ENDC}{bcolors.ENDC}{bcolors.ENDC}')
+        print(get_persent())
 
         if more:
             print("\n\n\t\tALL ERRORS\t\t\n\n")
