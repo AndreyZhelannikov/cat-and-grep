@@ -159,7 +159,7 @@ Suite *suite_combinations(void) {
     TCase *tc = tcase_create("combinations_tc");
 
     system("clear");
-    tcase_add_loop_test(tc, test_combinations_1, 256, 257);
+    tcase_add_loop_test(tc, test_combinations_1, 0, 1024);
     // tcase_add_loop_test(tc, test_combinations_2, 0, 1024);
     // tcase_add_loop_test(tc, test_combinations_3, 0, 1024);
     // tcase_add_loop_test(tc, test_combinations_4, 0, 1024);

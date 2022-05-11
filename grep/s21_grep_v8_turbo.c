@@ -61,47 +61,66 @@ int seek_in_file(FILE *fd, t_pattern *patterns, int patterns_cnt, int *flags, t_
     int matching_lines = 0;
     int line_number = 0;
     size_t size = 0;
-    regex_t regex;
     char *line = NULL;
     while (getline(&line, &size, fd) != -1) {
         int one_time_print = 1;
         line_number++;
-        if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+        trim_n(line);
         for (int i = 0; i < patterns_cnt; i++) {
-            if (patterns[i].is_file) {
-                seek_file_patterns(line, patterns + i, file, flags, &matching_lines, files_cnt, line_number,
-                                   &one_time_print);
-            } else {
-                seek_pattern(line, patterns[i], file, flags, &matching_lines, files_cnt, line_number,
-                             &one_time_print);
-            }
+            seek_choice(line, patterns + i, file, flags, &matching_lines, files_cnt, line_number,
+                        &one_time_print);
         }
     }
     return matching_lines;
 }
 
+void seek_choice(char *line, t_pattern *pattern, t_file *file, int *flags, int *matching_lines, int files_cnt,
+                 int line_number, int *one_time_print) {
+    if (flags[V] && flags[O]) {
+        //
+    } else if (flags[O]) {
+        //
+    } else if (flags[V]) {
+        //
+    } else {
+        if (pattern->is_file)
+            seek_file_patterns(line, pattern, file, flags, matching_lines, files_cnt, line_number,
+                               one_time_print);
+        else
+            seek_pattern(line, *pattern, file, flags, matching_lines, files_cnt, line_number, one_time_print);
+    }
+}
+
+/*
+void seek_v_pattern(char *line, t_pattern pattern, t_file *file, int *flags, int *matching_lines,
+                    int files_cnt, int line_number, int *one_time_print) {
+    //
+    regex_t regex;
+    trim_n(pattern.name);
+    int comp_val = do_regcomp(&regex, flags, pattern.name);
+    if (!comp_val) {
+        int exec_val = regexec(&regex, line, 0, NULL, 0);
+        if (exec_val == REG_NOMATCH) {
+            print_match(line, flags, file, files_cnt, line_number, one_time_print, matching_lines);
+        }
+    } else {
+        printf("Regex comp. fail\n");
+    }
+    regfree(&regex);
+}
+*/
 void seek_file_patterns(char *line, t_pattern *pattern, t_file *file, int *flags, int *matching_lines,
                         int files_cnt, int line_number, int *one_time_print) {
     FILE *fd = fopen(pattern->file_name, "r");
-    char *file_line = NULL;
-    size_t file_line_size = 0;
-    regex_t regex;
     if (fd) {
+        char *file_line = NULL;
+        size_t file_line_size = 0;
         while (getline(&file_line, &file_line_size, fd) != -1) {
-            if (file_line[strlen(file_line) - 1] == '\n') file_line[strlen(file_line) - 1] = '\0';
-            int comp_val = do_regcomp(&regex, flags, file_line);
-            if (!comp_val) {
-                int exec_val = regexec(&regex, line, 0, NULL, 0);
-                if (exec_val == 0) {
-                    (*matching_lines)++;
-                    if (!flags[C] && !flags[L]) {
-                        print_match(line, flags, file, files_cnt, line_number, one_time_print);
-                    }
-                    break;
-                }
-            }
-            fclose(fd);
+            pattern->name = file_line;
+            seek_pattern(line, *pattern, file, flags, matching_lines, files_cnt, line_number, one_time_print);
         }
+        free(file_line);
+        fclose(fd);
     } else {
         printf("No such file or directory\n");
     }
@@ -110,13 +129,12 @@ void seek_file_patterns(char *line, t_pattern *pattern, t_file *file, int *flags
 void seek_pattern(char *line, t_pattern pattern, t_file *file, int *flags, int *matching_lines, int files_cnt,
                   int line_number, int *one_time_print) {
     regex_t regex;
+    trim_n(pattern.name);
     int comp_val = do_regcomp(&regex, flags, pattern.name);
     if (!comp_val) {
         int exec_val = regexec(&regex, line, 0, NULL, 0);
-        if (exec_val == 0 || line[0] == '\0') {
-            (*matching_lines)++;
-            if (!flags[C] && !flags[L])
-                print_match(line, flags, file, files_cnt, line_number, one_time_print);
+        if (exec_val == 0) {
+            print_match(line, flags, file, files_cnt, line_number, one_time_print, matching_lines);
         }
     } else {
         printf("Regex comp. fail\n");
@@ -127,13 +145,21 @@ void seek_pattern(char *line, t_pattern pattern, t_file *file, int *flags, int *
 // void seek_in_file_o(FILE *fd, t_pattern *patterns, int patterns_cnt, int *flags, t_file *file) {
 // }
 
-void print_match(char *line, int *flags, t_file *file, int files_cnt, int line_number, int *one_time_print) {
-    if (*one_time_print) {
+void print_match(char *line, int *flags, t_file *file, int files_cnt, int line_number, int *one_time_print,
+                 int *maching_lines) {
+    if (!flags[C] && !flags[L] && *one_time_print) {
+        if (strlen(line) == 1 && line[0] == '.') line[0] = '\0';
         if (!flags[H] && files_cnt > 1) printf("%s:", file->file_name);
         if (flags[N]) printf("%d:", line_number);
         printf("%s\n", line);
     }
+    if (*one_time_print) (*maching_lines)++;
     *one_time_print = 0;
+}
+
+void trim_n(char *line) {
+    if (strlen(line) == 1 && line[0] == '\n') line[0] = '.';
+    if (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
 }
 
 void get_files(int argc, char **argv, t_pattern *patterns, int patterns_cnt, t_file *files, int files_cnt,
