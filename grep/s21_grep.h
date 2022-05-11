@@ -69,10 +69,18 @@ void print_files_c(t_file *file, int files_cnt, int maching_lines, int *flags);
 
 void print_files_l(t_file *file, int files_cnt, int maching_lines, int *flags);
 void seek_file_patterns(char *line, t_pattern *pattern, t_file *file, int *flags, int *matching_lines,
-                        int files_cnt, int line_number, int *one_time_print);
+                        int files_cnt, int line_number, int *one_time_print, int *file_name_print);
 void seek_pattern(char *line, t_pattern pattern, t_file *file, int *flags, int *matching_lines, int files_cnt,
                   int line_number, int *one_time_print);
 void trim_n(char *line);
 
 void seek_choice(char *line, t_pattern *pattern, t_file *file, int *flags, int *matching_lines, int files_cnt,
-                 int line_number, int *one_time_print);
+                 int line_number, int *one_time_print, int *file_name_print);
+void seek_o_pattern(char *line, t_pattern *pattern, t_file *file, int *flags, int *maching_lines,
+                    int files_cnt, int line_number, int *one_time_print, int *file_name_print);
+void print_o_match(int *file_name_print, t_file *file, size_t offset, regmatch_t match, char *line,
+                   int *flags, int line_number, int files_cnt);
+
+int is_empty_line(char *name);
+int is_empty_line_in_patterns(t_pattern *patterns, int patterns_cnt);
+int print_all(FILE *fd, int *flags, t_file *file, int files_cnt);

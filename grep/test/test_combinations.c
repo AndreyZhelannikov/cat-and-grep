@@ -132,7 +132,7 @@ void get_flags(char *flags, int _i, char *e_pattern, char *search_pattern, char 
         strcat(flags, e_pattern);
     }
     if (_i >> 1 & 1) strcat(flags, s21_grep_flags[1]);
-    // if (_i >> 2 & 1) strcat(flags, s21_grep_flags[2]);
+    if (_i >> 2 & 1 && !(_i >> 9 & 1)) strcat(flags, s21_grep_flags[2]);
     if (_i >> 3 & 1) strcat(flags, s21_grep_flags[3]);
     if (_i >> 4 & 1) strcat(flags, s21_grep_flags[4]);
     if (_i >> 5 & 1) strcat(flags, s21_grep_flags[5]);
@@ -142,7 +142,7 @@ void get_flags(char *flags, int _i, char *e_pattern, char *search_pattern, char 
         strcat(flags, s21_grep_flags[8]);
         strcat(flags, f_file);
     }
-    // if (_i >> 9 & 1) strcat(flags, s21_grep_flags[9]);
+    if (_i >> 9 & 1) strcat(flags, s21_grep_flags[9]);
     if (!(_i >> 0 & 1) && !(_i >> 8 & 1)) strcat(flags, search_pattern);
     // strcat(flags, search_pattern);
 }
@@ -160,9 +160,9 @@ Suite *suite_combinations(void) {
 
     system("clear");
     tcase_add_loop_test(tc, test_combinations_1, 0, 1024);
-    // tcase_add_loop_test(tc, test_combinations_2, 0, 1024);
-    // tcase_add_loop_test(tc, test_combinations_3, 0, 1024);
-    // tcase_add_loop_test(tc, test_combinations_4, 0, 1024);
+    tcase_add_loop_test(tc, test_combinations_2, 0, 1024);
+    tcase_add_loop_test(tc, test_combinations_3, 0, 1024);
+    tcase_add_loop_test(tc, test_combinations_4, 0, 1024);
 
     suite_add_tcase(s, tc);
     return s;
