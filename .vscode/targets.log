@@ -1,0 +1,665 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+ 
+
+# Make data base, printed on Wed May 11 12:35:51 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# makefile (from `Makefile', line 32)
+GREP_TEST_OBJ_DIR = ./grep/test/objs
+# makefile (from `Makefile', line 40)
+GREP_TEST_INC = ./grep/test/s21_grep_test.h
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from `Makefile', line 29)
+GREP_OBJ_DIR = ./grep/objs
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /Users/andreyzhelannikov/cat-and-grep
+# makefile (from `Makefile', line 5)
+MK = mkdir -p
+# makefile
+SHELL = /bin/sh
+# makefile (from `Makefile', line 6)
+RM = rm -f
+# makefile (from `Makefile', line 39)
+GREP_INC = ./grep/s21_grep.h
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/make
+# makefile (from `Makefile', line 4)
+CFLAGS = -c -Wall -Wextra -std=c11 -g 
+# makefile (from `Makefile', line 8)
+CAT_TAR = s21_cat
+# environment
+STARSHIP_SESSION_KEY = 2630316952617462
+# makefile (from `Makefile', line 9)
+CAT_TEST_TAR = s21_cat_test
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# environment
+INFOPATH = /opt/homebrew/share/info:
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zf/nthzbpb520946jjgmb2f_s0r0000gn/T/vscode-ipc-6f8f48dc-23e6-472b-822b-0b3c7ff0062e.sock
+# environment
+VSCODE_CWD = /
+# makefile (from `Makefile', line 38)
+GREP_TEST_OBJ := ./grep/test/objs/test_i.o ./grep/test/objs/test_c.o ./grep/test/objs/test_combinations.o ./grep/test/objs/test_base.o ./grep/test/objs/test_n.o ./grep/test/objs/test_v.o ./grep/test/objs/test_o.o ./grep/test/objs/test_e.o ./grep/test/objs/test_s.o ./grep/test/objs/test_l.o ./grep/test/objs/test_f.o ./grep/test/objs/s21_grep_test.o ./grep/test/objs/test_h.o
+# environment
+PATH = /opt/local/bin:/opt/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+# makefile (from `Makefile', line 15)
+CAT_TEST_OBJ_DIR = ./cat/test/objs
+# makefile (from `Makefile', line 23)
+CAT_TEST_INC = ./cat/test/s21_cat_test.h
+# environment
+LSCOLORS = Gxfxcxdxbxegedabagacad
+# makefile (from `Makefile', line 37)
+GREP_OBJ := ./grep/objs/s21_grep_v8_turbo.o
+# makefile (from `Makefile', line 12)
+CAT_OBJ_DIR = ./cat/objs
+# makefile (from `Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# makefile (from `Makefile', line 22)
+CAT_INC = ./cat/s21_cat.h
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.hvyh80OuB9/Listeners
+# automatic
+%F = $(notdir $%)
+# makefile (from `Makefile', line 31)
+GREP_TEST_SRC_DIR = ./grep/test
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /Users/andreyzhelannikov/cat-and-grep
+# environment
+HOMEBREW_CELLAR = /opt/homebrew/Cellar
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# makefile (from `Makefile', line 28)
+GREP_SRC_DIR = ./grep
+# environment
+MANPATH = /opt/local/share/man:/opt/homebrew/share/man::
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# makefile (from `Makefile', line 21)
+CAT_TEST_OBJ := ./cat/test/objs/s21_cat_test.o
+# environment
+HOME = /Users/andreyzhelannikov
+# default
+MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/andreyzhelannikov/Library/Application Support/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
+# environment
+LOGNAME = andreyzhelannikov
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+ZSH = /Users/andreyzhelannikov/.oh-my-zsh
+# makefile (from `Makefile', line 20)
+CAT_OBJ := ./cat/objs/s21_cat.o
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+XPC_FLAGS = 0x0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 1
+# makefile (from `Makefile', line 1)
+CC = gcc
+# default
+MAKE_VERSION := 3.81
+# environment
+USER = andreyzhelannikov
+# makefile
+.DEFAULT_GOAL := all
+# makefile (from `Makefile', line 35)
+GREP_TEST_SRC = $(shell find $(GREP_TEST_SRC_DIR) -maxdepth 1 -name "*.c")
+# environment
+LESS = -R
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from `Makefile', line 14)
+CAT_TEST_SRC_DIR = ./cat/test
+# default
+MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# makefile (from `Makefile', line 34)
+GREP_SRC = $(shell find $(GREP_SRC_DIR) -maxdepth 1 -name "*.c")
+# default
+.VARIABLES := 
+# environment
+TMPDIR = /var/folders/zf/nthzbpb520946jjgmb2f_s0r0000gn/T/
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /Users/andreyzhelannikov/Library/Application Support/Code/1.67.1-main.sock
+# makefile (from `Makefile', line 11)
+CAT_SRC_DIR = ./cat
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.3892367.3892373
+# environment
+HOMEBREW_PREFIX = /opt/homebrew
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# makefile (from `Makefile', line 3)
+ASAN := -fsanitize=address -g
+# automatic
++F = $(notdir $+)
+# environment
+HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# makefile (from `Makefile', line 26)
+GREP_TEST_TAR = s21_grep_test
+# environment
+PAGER = less
+# environment
+LC_ALL = C
+# makefile (from `Makefile', line 18)
+CAT_TEST_SRC = $(shell find $(CAT_TEST_SRC_DIR) -maxdepth 1 -name "*.c")
+# automatic
+^F = $(notdir $^)
+# makefile (from `Makefile', line 25)
+GREP_TAR = s21_grep
+# default
+SUFFIXES := 
+# makefile (from `Makefile', line 17)
+CAT_SRC = $(shell find $(CAT_SRC_DIR) -maxdepth 1 -name "*.c")
+# default
+.INCLUDE_DIRS = /usr/local/include
+# environment
+MAKELEVEL := 0
+# environment
+LANG = C
+# environment
+VSCODE_PID = 4237
+# environment
+STARSHIP_SHELL = zsh
+# variable set hash-table stats:
+# Load=102/1024=10%, Rehash=0, Collisions=8/191=4%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777233, inode 3890806): 31 files, no impossibilities.
+
+# 31 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+grep/test/s21_grep_test.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/test_c.o: grep/test/test_c.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_c'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+grep/test/test_f.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/test_h.o: grep/test/test_h.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_h'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+grep/test/objs/test_combinations.o: grep/test/test_combinations.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_combinations'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+cat/test/objs/s21_cat_test.o: cat/test/s21_cat_test.c cat/test/s21_cat_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/s21_cat_test'
+#  Modification time never checked.
+#  File has not been updated.
+ 
+#  commands to execute (from `Makefile', line 59):
+	@$(MK) $(CAT_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+all: s21_grep grep_test
+#  Command-line target.
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
+#  commands to execute (from `Makefile', line 43):
+	./s21_grep_test
+	
+
+s21_cat: cat/objs/s21_cat.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 47):
+	$(CC) $(CAT_OBJ) -o $(CAT_TAR) 
+	
+
+# Not a target:
+grep/test/test_c.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/s21_grep_test.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/test_h.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/test_combinations.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+cat/test/s21_cat_test.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/test_base.o: grep/test/test_base.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_base'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/test_v.o: grep/test/test_v.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_v'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+grep/test/objs/test_l.o: grep/test/test_l.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_l'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-11 12:17:12
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+grep/test/objs/test_f.o: grep/test/test_f.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_f'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+grep/test/objs/test_e.o: grep/test/test_e.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_e'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+s21_grep_test: grep/test/objs/test_i.o grep/test/objs/test_c.o grep/test/objs/test_combinations.o grep/test/objs/test_base.o grep/test/objs/test_n.o grep/test/objs/test_v.o grep/test/objs/test_o.o grep/test/objs/test_e.o grep/test/objs/test_s.o grep/test/objs/test_l.o grep/test/objs/test_f.o grep/test/objs/s21_grep_test.o grep/test/objs/test_h.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 69):
+	$(CC) $(ASAN) $(GREP_TEST_OBJ) -o $(GREP_TEST_TAR) -lcheck
+	
+
+# Not a target:
+cat/test/s21_cat_test.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/test_n.o: grep/test/test_n.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_n'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+grep/test/test_v.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/test_e.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/test_l.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+cat/objs/s21_cat.o: cat/s21_cat.c cat/s21_cat.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/s21_cat'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 55):
+	@$(MK) $(CAT_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+fclean: clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 89):
+	$(RM) $(CAT_TAR)
+	$(RM) $(CAT_TEST_TAR)
+	$(RM) $(GREP_TAR)
+	$(RM) $(GREP_TEST_TAR)
+	
+
+# Not a target:
+grep/test/test_s.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+cat_test: s21_cat_test
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+cat/s21_cat.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+s21_grep: grep/objs/s21_grep_v8_turbo.o
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
+#  commands to execute (from `Makefile', line 64):
+	$(CC) $(ASAN) $(GREP_OBJ) -o $(GREP_TAR) 
+	
+
+# Not a target:
+grep/test/test_n.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+re: fclean all
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+cat/s21_cat.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 83):
+	$(RM) -r $(CAT_OBJ_DIR)
+	$(RM) -r $(CAT_TEST_OBJ_DIR)
+	$(RM) -r $(GREP_OBJ_DIR)
+	$(RM) -r $(GREP_TEST_OBJ_DIR)
+	
+
+grep/test/objs/test_s.o: grep/test/test_s.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_s'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+grep/s21_grep.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-11 12:14:24
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+grep/objs/s21_grep_v8_turbo.o: grep/s21_grep_v8_turbo.c grep/s21_grep.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/s21_grep_v8_turbo'
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := grep/objs/s21_grep_v8_turbo.o
+# automatic
+# % := 
+# automatic
+# * := /s21_grep_v8_turbo
+# automatic
+# + := grep/s21_grep_v8_turbo.c grep/s21_grep.h Makefile
+# automatic
+# | := 
+ 
+# automatic
+# < := grep/s21_grep_v8_turbo.c
+# automatic
+# ^ := grep/s21_grep_v8_turbo.c grep/s21_grep.h Makefile
+# automatic
+# ? := grep/s21_grep_v8_turbo.c grep/s21_grep.h Makefile
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=3/16=19%
+#  commands to execute (from `Makefile', line 72):
+	@$(MK) $(GREP_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+s21_cat_test: cat/test/objs/s21_cat_test.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 52):
+	$(CC) $(CAT_TEST_OBJ) -o $(CAT_TEST_TAR)
+	
+
+# Not a target:
+grep/s21_grep_v8_turbo.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-11 12:14:58
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+grep/test/objs/test_i.o: grep/test/test_i.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_i'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+grep/test/objs/test_o.o: grep/test/test_o.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/test_o'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+grep/test/test_o.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep_test: s21_grep_test
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+grep/test/test_i.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+grep/test/objs/s21_grep_test.o: grep/test/s21_grep_test.c grep/test/s21_grep_test.h Makefile
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `/s21_grep_test'
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	@$(MK) $(GREP_TEST_OBJ_DIR)
+	$(CC) $(CFLAGS) -o $@ $<
+	
+
+# Not a target:
+grep/test/test_base.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=49/1024=5%, Rehash=0, Collisions=22/133=17%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 1
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+
+# Finished Make data base on Wed May 11 12:35:51 2022
+
+ 

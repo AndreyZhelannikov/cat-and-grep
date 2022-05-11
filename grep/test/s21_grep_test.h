@@ -37,3 +37,4 @@ Suite *suite_o(void);
 Suite *suite_combinations(void);
 
 int pretty_print(char *grep, char *s21_grep, int val, int _i);
+void get_flags(char *flags, int _i, char *e_pattern, char *search_pattern, char *f_file);

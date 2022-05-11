@@ -1,0 +1,35 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/andreyzhelannikov/cat-and-grep'
+mkdir -p ./grep/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/objs/s21_grep_v8_turbo.o grep/s21_grep_v8_turbo.c
+gcc -fsanitize=address -g ./grep/objs/s21_grep_v8_turbo.o -o s21_grep 
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_i.o grep/test/test_i.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_c.o grep/test/test_c.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_combinations.o grep/test/test_combinations.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_base.o grep/test/test_base.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_n.o grep/test/test_n.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_v.o grep/test/test_v.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_o.o grep/test/test_o.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_e.o grep/test/test_e.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_s.o grep/test/test_s.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_l.o grep/test/test_l.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_f.o grep/test/test_f.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/s21_grep_test.o grep/test/s21_grep_test.c
+mkdir -p ./grep/test/objs
+gcc -c -Wall -Wextra -std=c11 -g  -o grep/test/objs/test_h.o grep/test/test_h.c
+gcc -fsanitize=address -g ./grep/test/objs/test_i.o ./grep/test/objs/test_c.o ./grep/test/objs/test_combinations.o ./grep/test/objs/test_base.o ./grep/test/objs/test_n.o ./grep/test/objs/test_v.o ./grep/test/objs/test_o.o ./grep/test/objs/test_e.o ./grep/test/objs/test_s.o ./grep/test/objs/test_l.o ./grep/test/objs/test_f.o ./grep/test/objs/s21_grep_test.o ./grep/test/objs/test_h.o -o s21_grep_test -lcheck
+./s21_grep_test
+make: Leaving directory `/Users/andreyzhelannikov/cat-and-grep'
+ 

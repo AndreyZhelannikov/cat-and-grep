@@ -62,11 +62,12 @@ void get_files(int argc, char **argv, t_pattern *patterns, int patterns_cnt, t_f
                int *flags);
 void files_processing(t_pattern *patterns, int patterns_cnt, t_file *files, int files_cnt, int *flags);
 int seek_in_file(FILE *fd, t_pattern *patterns, int patterns_cnt, int *flags, t_file *file, int files_cnt);
+void print_match(char *line, int *flags, t_file *file, int files_cnt, int line_number, int *one_time_print);
+
+void print_files_c(t_file *file, int files_cnt, int maching_lines, int *flags);
+
+void print_files_l(t_file *file, int files_cnt, int maching_lines, int *flags);
 void seek_file_patterns(char *line, t_pattern *pattern, t_file *file, int *flags, int *matching_lines,
                         int files_cnt, int line_number, int *one_time_print);
 void seek_pattern(char *line, t_pattern pattern, t_file *file, int *flags, int *matching_lines, int files_cnt,
                   int line_number, int *one_time_print);
-void print_match(char *line, int *flags, t_file *file, int files_cnt, int mached_lines);
-
-void print_files_c(t_file *file, int files_cnt, int maching_lines, int *flags);
-void print_files_l(t_file *file, int files_cnt, int maching_lines, int *flags);
