@@ -19,19 +19,19 @@ void start_tests() {
     }
     for (int i = 0; i < 64; i++) {
         file_gen();
-        char command1[64] = {'\0'};
-        char command2[64] = {'\0'};
+        char command1[512] = {'\0'};
+        char command2[512] = {'\0'};
         strcat(command1, "cat");
         strcat(command2, "./s21_cat");
         strcat(command1, buff[i]);
         strcat(command2, buff[i]);
-        strcat(command1, " tmp_test_file1 > tmp1");
-        strcat(command2, " tmp_test_file2 > tmp2");
+        strcat(command1, " cat/test/tmp_test_file1 > cat/test/tmp1");
+        strcat(command2, " cat/test/tmp_test_file2 > cat/test/tmp2");
         printf("%s\n", command1);
         printf("%s\n", command2);
         system(command1);
         system(command2);
-        if (system("diff tmp1 tmp2")) {
+        if (system("diff cat/test/tmp1 cat/test/tmp2")) {
             printf("%sFAIL%s\n", RED, RESET);
         } else {
             printf("%sOK!%s\n", GRN, RESET);
@@ -39,33 +39,10 @@ void start_tests() {
     }
 }
 
-/*int compare(void) {
-    FILE *fd_tmp1 = fopen("tmp1", "r");
-    FILE *fd_tmp2 = fopen("tmp2", "r");
-    if (fd_tmp1 && fd_tmp2) {
-        while (1) {
-            char *ptr_tmp1 = NULL;
-            char *ptr_tmp2 = NULL;
-            size_t buff1 = 0;
-            size_t buff2 = 0;
-            if (getline(&ptr_tmp1, &buff1, fd_tmp1) == -1) break;
-            if (getline(&ptr_tmp2, &buff2, fd_tmp2) == -1) break;
-            if (buff1 != buff2) printf("buffers no eq\n");
-            if (memcmp(ptr_tmp1, ptr_tmp2, buff1))
-                printf("CMP::%d\nS1::%s\nS2::%s\n", strcmp(ptr_tmp1, ptr_tmp2), ptr_tmp1, ptr_tmp2);
-        }
-        fclose(fd_tmp1);
-        fclose(fd_tmp2);
-    } else {
-        perror("");
-    }
-}
-*/
-
 void file_gen(void) {
     int len = rand() % 10000;
-    FILE *fd1 = fopen("tmp_test_file1", "w");
-    FILE *fd2 = fopen("tmp_test_file2", "w");
+    FILE *fd1 = fopen("cat/test/tmp_test_file1", "w");
+    FILE *fd2 = fopen("cat/test/tmp_test_file2", "w");
     if (fd1 && fd2) {
         for (int i = 0; i < len; i++) {
             unsigned char c = rand() % 127;
