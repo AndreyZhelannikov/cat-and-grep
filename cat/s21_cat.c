@@ -8,22 +8,6 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-// -b == --number-nonblank
-// -e == -vE
-// -E
-// -v
-// -n == --number
-// -s == --squeeze-blank
-// -t == -vT
-// -T
-
-// -b
-// -v
-// -E
-// -n
-// -s
-// -T
-
 void s21_cat(int argc, char **argv) {
     int flags[6] = {0};
     int fail_flags = 0;
